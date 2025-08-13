@@ -43,9 +43,6 @@ In this step your goal is to extend the parser to parse a JSON object containing
 "key4": "value",
 "key5": 101
 } 
-1) allarghiamo le stringhe anche a -_ con Character.isJavaIdentifierPart
-2) inseriamo loc (location in string di consumo prossimo carattere) e possibilità di tornare il consume() a un certo (precedente) loc
-2) inseriamo token boolean
 
 **Step4**
 In this step your goal is to extend the parser to parse a JSON object with object and array values, i.e.:
