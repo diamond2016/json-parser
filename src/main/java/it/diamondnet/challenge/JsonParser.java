@@ -84,12 +84,16 @@ public class JsonParser extends Parser {
     }   
     
     // JSON Value: String
-    public void jString() {
+    public void jString() {  
         match(JsonLexer.DQUOTE);
-        // inside quotes, numbers and / and : and , are allowed
-        while (match(JsonLexer.ALPHA) || match(JsonLexer.NUMBER) || match(JsonLexer.COLON)  || match(JsonLexer.COMMA)) {
-            ;
-        }
+        // inside quotes, all allowed
+        while (match(JsonLexer.ALPHA) || 
+               match(JsonLexer.NUMBER) || 
+               match(JsonLexer.COLON)  || 
+               match(JsonLexer.TRUEC)  || match(JsonLexer.FALSEC)  ||  
+               match(JsonLexer.LBRACKC) || match(JsonLexer.RBRACKC)  || 
+               match(JsonLexer.MINUSC) || match(JsonLexer.DOTC)
+               ) { ; }
         match(JsonLexer.DQUOTE);
     }
     
@@ -138,7 +142,7 @@ public class JsonParser extends Parser {
     }
     
     private String print_debug() {
-        int initial; int end; int p = getInput().p -1; int l = getInput().input.length(); int delta = 10;
+        int initial; int end; int p = getInput().p -1; int l = getInput().input.length(); int delta = 100;
         if ( getInput().c == (char) -1 )
             return ("");
         if ((p - delta) >= 0)

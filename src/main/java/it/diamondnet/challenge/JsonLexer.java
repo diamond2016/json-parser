@@ -125,12 +125,14 @@ public class JsonLexer extends Lexer {
 			consume(); 
 			return new Token(ALPHA, Character.toString(save_c)); 
 		}
-		else 
-			throw new Error("Invalid character " + c + " found at location " + p);
+		else {
+			System.err.println(print_debug());			
+			throw new Error("Invalid character >>>" + c + "<<< found at location " + p);
+		}
 	}
 
     protected void WS() {
-        while (c == ' ' || c == '\n' || c == '\t' || c == '\r' || c== '\\')
+        while (c == ' ' || c == '\n' || c == '\t' || c == '\r' || c == '\f')
             consume();
     }
 
@@ -161,11 +163,33 @@ public class JsonLexer extends Lexer {
 	}
 	
 	protected boolean isBackSlash(char c) {
-		boolean isBacksl =  (c =='\\' && (p+1 < input.length()) && (input.charAt(p+1) == '\\'));
+		boolean isBacksl =  (c =='\\');
 		if (isBacksl)
 			consume();
 		return isBacksl;
 	}
 	
+    private String print_debug() {
+        int initial; int end; int p = getP() -1; int l = input.length(); int delta = 100;
+        if ( c == (char) -1 )
+            return ("");
+        if ((p - delta) >= 0)
+            initial = p - delta;
+        else 
+            initial = 0;
+        if ((p + delta) < l)
+            end = p + delta;
+        else 
+            end = l -1;
+        StringBuilder buf = new StringBuilder();
+        for (int i = initial; i < p; i++)
+            buf.append( input.charAt(i));
+        buf.append('<');
+        buf.append( input.charAt(p));
+        buf.append('>');
+        for (int i = p + 1; i < end; i++)
+            buf.append( input.charAt(i));
+        return(buf.toString());
+    }
 
 }

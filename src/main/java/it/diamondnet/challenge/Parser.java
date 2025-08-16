@@ -36,7 +36,7 @@ public abstract class Parser {
             consume();
             return true;
         } else { 
-        	System.out.println("Warning matching token type " + x +  " found token " + lookahead);
+        	//System.out.println("Warning matching token type " + x +  " found token " + lookahead);
             return false;
         }
     }      
