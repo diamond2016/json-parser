@@ -56,7 +56,7 @@ public class JsonParser extends Parser {
     
     // JSON Value
     public void jValue() {       
-        if (getLookAhead().type == JsonLexer.DQUOTE) {
+        if (getLookAhead().type == JsonLexer.STRING) {
             jString();
         }
       
@@ -91,17 +91,7 @@ public class JsonParser extends Parser {
     
     // JSON Value: String
     public void jString() {  
-        match(JsonLexer.DQUOTE);
-        // inside quotes, all allowed
-        while (match(JsonLexer.ALPHA) || 
-               match(JsonLexer.NUMBER) || 
-               match(JsonLexer.COLON)  || 
-               match(JsonLexer.COMMA)  ||
-               match(JsonLexer.TRUEC)  || match(JsonLexer.FALSEC)  ||  
-               match(JsonLexer.LBRACKC) || match(JsonLexer.RBRACKC)  || 
-               match(JsonLexer.MINUSC) || match(JsonLexer.DOTC) || match(JsonLexer.BACKS) || match(JsonLexer.ESCAPED)
-               ) { ; }
-        match(JsonLexer.DQUOTE);
+        match(JsonLexer.STRING);
     }
     
     // JSON Value: Bool

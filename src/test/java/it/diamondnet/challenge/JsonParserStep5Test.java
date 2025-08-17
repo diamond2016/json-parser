@@ -114,4 +114,16 @@ public class JsonParserStep5Test {
             parser.jString();
         });
     }
+
+    @Test
+    public void jsonParserStep5Object1() {
+        String input="{\"java.jdt.ls.vmargs\": \"default: -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable\"}";
+        System.out.println("Test object1 - step5");
+        assertDoesNotThrow(() -> {
+            JsonLexer lexer = new JsonLexer(input);
+            JsonParser parser = new JsonParser(lexer);
+            parser.jObject();
+        });
+    }
+
 }

@@ -17,8 +17,7 @@ public class JsonLexer extends Lexer {
     public static final int NULL   = 10;
 	public static final int LBRACK = 11;
 	public static final int RBRACK = 12;
-	public static final int BACKS = 13;
-	public static final int ESCAPED  = 14;
+    public static final int STRING = 13;
 	
     public static final char LBRAC = '{';
     public static final char RBRAC = '}';
@@ -39,7 +38,7 @@ public class JsonLexer extends Lexer {
     public static final String	NULLS = "null";
 	public static final String  EQUOTES = "\\\"";
 
-    public static String[] tokenNames = {"n/a", "<EOF>", "LBRACE", "RBRACE", "COMMA", "COLON", "DQUOTE", "ALPHA", "BOOL", "NUMBER", "NULL", "LBRACK", "RBRACK", "BACKS", "ESCAPED"};
+    public static String[] tokenNames = {"n/a", "<EOF>", "LBRACE", "RBRACE", "COMMA", "COLON", "DQUOTE", "ALPHA", "BOOL", "NUMBER", "NULL", "LBRACK", "RBRACK", "STRING"};
 
 
 	public JsonLexer(String input) {
@@ -59,8 +58,7 @@ public class JsonLexer extends Lexer {
                     consume();
                     return new Token(RBRACE, "}");
 				case DQUOTEC:
-					consume();
-					return new Token(DQUOTE, "\"");
+					return STRING();
 				case COLONC:
 					consume();
 					return new Token(COLON, ":");
@@ -87,7 +85,7 @@ public class JsonLexer extends Lexer {
 					else {
 						consume(); 
 				    	return new Token(ALPHA, Character.toString(c));
-					}	
+					} //	
 				case LBRACKC:
                     consume();
 					return new Token(LBRACK, "[");
@@ -108,16 +106,6 @@ public class JsonLexer extends Lexer {
 					}
 					catch (IndexOutOfBoundsException e) { break;}	
 				}
-				case BACKSC: {
-					if (matchPattern(EQUOTES)) {
-						System.out.println("equotes!");
-						return new Token(ESCAPED, "\\");
-					}
-					else {
-						consume(); 
-				    	return new Token(BACKS, "\\");
-					}					
-				}
                 default:
 					return manage_default();
             }
@@ -135,7 +123,7 @@ public class JsonLexer extends Lexer {
 			consume(); 
 			return new Token(NUMBER, Character.toString(save_c)); 
 		}
-		else if (isAlphaValid(c) || isBackSlash(c)) { 
+		else if (isAlphaValid(c)) { 
 			consume(); 
 			return new Token(ALPHA, Character.toString(save_c)); 
 		}
@@ -144,6 +132,49 @@ public class JsonLexer extends Lexer {
 			throw new Error("Invalid character >>>" + c + "<<< found at location " + p);
 		}
 	}
+
+    protected Token STRING() {
+        StringBuilder buf = new StringBuilder();
+        consume(); // consume the opening quote
+        while (c != DQUOTEC) {
+            if (c == BACKSC) {
+                consume(); // consume the backslash
+                switch (c) {
+                    case '"':
+                        buf.append('"');
+                        break;
+                    case '\\':
+                        buf.append('\\');
+                        break;
+                    case '/':
+                        buf.append('/');
+                        break;
+                    case 'b':
+                        buf.append('\b');
+                        break;
+                    case 'f':
+                        buf.append('\f');
+                        break;
+                    case 'n':
+                        buf.append('\n');
+                        break;
+                    case 'r':
+                        buf.append('\r');
+                        break;
+                    case 't':
+                        buf.append('\t');
+                        break;
+                    default:
+                        throw new Error("Invalid escape sequence: \\" + c);
+                }
+            } else {
+                buf.append(c);
+            }
+            consume();
+        }
+        consume(); // consume the closing quote
+        return new Token(STRING, buf.toString());
+    }
 
     protected void WS() {
         while (c == ' ' || c == '\n' || c == '\t' || c == '\r' || c == '\f')
@@ -176,17 +207,10 @@ public class JsonLexer extends Lexer {
         return c != '"' && c >= 0x20;
 	}
 	
-	protected boolean isBackSlash(char c) {
-		boolean isBacksl =  (c =='\\');
-		if (isBacksl)
-			consume();
-		return isBacksl;
-	}
-	
     private String print_debug() {
         int initial; int end; int p = getP() -1; int l = input.length(); int delta = 100;
         if ( c == (char) -1 )
-            return ("");
+            return (" ");
         if ((p - delta) >= 0)
             initial = p - delta;
         else 
