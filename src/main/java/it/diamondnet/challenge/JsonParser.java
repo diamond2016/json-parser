@@ -142,7 +142,7 @@ public class JsonParser extends Parser {
         }
         
         else if (getLookAhead().type == JsonLexer.LBRACK) {
-            Jjrray();
+            jArray();
         }
 
         else {
