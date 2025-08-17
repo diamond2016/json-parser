@@ -90,6 +90,7 @@ public class JsonParser extends Parser {
         while (match(JsonLexer.ALPHA) || 
                match(JsonLexer.NUMBER) || 
                match(JsonLexer.COLON)  || 
+               match(JsonLexer.COMMA)  ||
                match(JsonLexer.TRUEC)  || match(JsonLexer.FALSEC)  ||  
                match(JsonLexer.LBRACKC) || match(JsonLexer.RBRACKC)  || 
                match(JsonLexer.MINUSC) || match(JsonLexer.DOTC)
