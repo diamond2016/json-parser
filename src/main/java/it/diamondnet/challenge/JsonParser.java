@@ -18,11 +18,13 @@ public class JsonParser extends Parser {
             throw new Error("Expecting opening object {, found " + getLookAhead().type + " " + getLookAhead().text + " at location: " + getInput().p);
         }
 
+       // Empty
+       if (getLookAhead().type == JsonLexer.RBRACE) {
+          match(JsonLexer.RBRACE);
+          return;
+        }
+        
         while (true) {
-            // if the next token is not a string, then it's the end of the object
-            if (getLookAhead().type != JsonLexer.DQUOTE) {
-                break;
-            }
             jString();	
 
             // kvalue or empty or string:value
@@ -32,29 +34,42 @@ public class JsonParser extends Parser {
             }
             jValue();
             
-            if (getLookAhead().type != JsonLexer.RBRACE) {
-                if (!match(JsonLexer.COMMA)) {
-                    System.err.println(print_debug());
-                    throw new Error("Expecting comma in object ,, found " + getLookAhead().type + " " + getLookAhead().text + " at location: " + getInput().p);
-                }
-
-                if (getLookAhead().type != JsonLexer.DQUOTE) {
-                    System.err.println(print_debug());
-                    throw new Error("Expecting other key/value, found " + getLookAhead().type + " " + getLookAhead().text + " at location: " + getInput().p);
-                }
+            // other key/value
+            if (getLookAhead().type == JsonLexer.COMMA) {
+                match(JsonLexer.COMMA);
+                continue;
             }
-            else
+
+            // end of object (no comma)
+            else if (match(JsonLexer.RBRACE)) {
+                match(JsonLexer.RBRACE);	   
                 break;
-        }
-        match(JsonLexer.RBRACE);	   
+            }
+            
+            // no parsing
+            else  {
+                System.err.println(print_debug());
+                throw new Error("Expecting comma or closing brace in object :, found " + getLookAhead().type + " " + getLookAhead().text + " at location: " + getInput().p);
+            }
+        }  
     }
     
     // JSON Value
-    public void jValue() { 
-        if (getLookAhead().type == JsonLexer.LBRACE) {
+    public void jValue() {       
+        if (getLookAhead().type == JsonLexer.DQUOTE) {
+            jString();
+        }
+      
+        else if (getLookAhead().type == JsonLexer.NUMBER) {
+            // number value
+            jNumber();
+        }
+
+        else if (getLookAhead().type == JsonLexer.LBRACE) {
             // jobject as nested value
             jObject();
         }
+        
         else if (getLookAhead().type == JsonLexer.NULL) {
             // null value
             jNull();
@@ -63,16 +78,7 @@ public class JsonParser extends Parser {
         else if (getLookAhead().type == JsonLexer.BOOL) {
             jBool();
         }
-        
-        else if (getLookAhead().type == JsonLexer.NUMBER) {
-            // number value
-            jNumber();
-        }
-        
-        else if (getLookAhead().type == JsonLexer.DQUOTE) {
-            jString();
-        }
-        
+          
         else if (getLookAhead().type == JsonLexer.LBRACK) {
             // array of values, is a value itself
             jArray();
@@ -126,7 +132,7 @@ public class JsonParser extends Parser {
         }
     }	
 
-    // JSON Value: Array (of value)
+    // JSON Value: Array (of value or object)
     public void jArray() {
         match(JsonLexer.LBRACK);
         while (getLookAhead().type != JsonLexer.RBRACK) {
