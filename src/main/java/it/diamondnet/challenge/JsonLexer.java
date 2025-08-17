@@ -17,6 +17,8 @@ public class JsonLexer extends Lexer {
     public static final int NULL   = 10;
 	public static final int LBRACK = 11;
 	public static final int RBRACK = 12;
+	public static final int BACKS = 13;
+	public static final int ESCAPED  = 14;
 	
     public static final char LBRAC = '{';
     public static final char RBRAC = '}';
@@ -30,12 +32,14 @@ public class JsonLexer extends Lexer {
 	public static final char RBRACKC = ']';
 	public static final char MINUSC = '-';
 	public static final char DOTC = '.';
+	public static final char BACKSC = '\\';
 
 	public static final String	TRUES = "true";
 	public static final String	FALSES = "false";
     public static final String	NULLS = "null";
+	public static final String  EQUOTES = "\\\"";
 
-    public static String[] tokenNames = {"n/a", "<EOF>", "LBRACE", "RBRACE", "COMMA", "COLON", "DQUOTE", "ALPHA", "BOOL", "NUMBER", "NULL", "LBRACK", "RBRACK"};
+    public static String[] tokenNames = {"n/a", "<EOF>", "LBRACE", "RBRACE", "COMMA", "COLON", "DQUOTE", "ALPHA", "BOOL", "NUMBER", "NULL", "LBRACK", "RBRACK", "BACKS", "ESCAPED"};
 
 
 	public JsonLexer(String input) {
@@ -75,15 +79,15 @@ public class JsonLexer extends Lexer {
 						return new Token(BOOL, FALSES);
 					else {
 						consume(); 
-				    return new Token(ALPHA, Character.toString(c));
-				}
+				    	return new Token(ALPHA, Character.toString(c));
+					}
 				case NULLC: // null start char
 					if (matchPattern(NULLS))
 						return new Token(NULL, NULLS);
 					else {
 						consume(); 
-				    return new Token(ALPHA, Character.toString(c));
-				}	
+				    	return new Token(ALPHA, Character.toString(c));
+					}	
 				case LBRACKC:
                     consume();
 					return new Token(LBRACK, "[");
@@ -103,6 +107,16 @@ public class JsonLexer extends Lexer {
 						{ consume(); return new Token(NUMBER, Character.toString(c)); } 
 					}
 					catch (IndexOutOfBoundsException e) { break;}	
+				}
+				case BACKSC: {
+					if (matchPattern(EQUOTES)) {
+						System.out.println("equotes!");
+						return new Token(ESCAPED, "\\");
+					}
+					else {
+						consume(); 
+				    	return new Token(BACKS, "\\");
+					}					
 				}
                 default:
 					return manage_default();
@@ -159,7 +173,7 @@ public class JsonLexer extends Lexer {
     }
     
 	protected boolean isAlphaValid(char c) {
-        return c != '"' && (c != '\\') && c >= 0x20;
+        return c != '"' && c >= 0x20;
 	}
 	
 	protected boolean isBackSlash(char c) {

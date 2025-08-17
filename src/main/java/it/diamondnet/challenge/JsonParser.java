@@ -41,7 +41,7 @@ public class JsonParser extends Parser {
             }
 
             // end of object (no comma)
-            else if (match(JsonLexer.RBRACE)) {
+            else if (getLookAhead().type == JsonLexer.RBRACE) {
                 match(JsonLexer.RBRACE);	   
                 break;
             }
@@ -99,7 +99,7 @@ public class JsonParser extends Parser {
                match(JsonLexer.COMMA)  ||
                match(JsonLexer.TRUEC)  || match(JsonLexer.FALSEC)  ||  
                match(JsonLexer.LBRACKC) || match(JsonLexer.RBRACKC)  || 
-               match(JsonLexer.MINUSC) || match(JsonLexer.DOTC)
+               match(JsonLexer.MINUSC) || match(JsonLexer.DOTC) || match(JsonLexer.BACKS) || match(JsonLexer.ESCAPED)
                ) { ; }
         match(JsonLexer.DQUOTE);
     }
