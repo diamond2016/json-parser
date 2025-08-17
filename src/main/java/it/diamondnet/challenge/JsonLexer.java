@@ -164,6 +164,19 @@ public class JsonLexer extends Lexer {
                     case 't':
                         buf.append('\t');
                         break;
+                    case 'u':
+                        StringBuilder hex = new StringBuilder();
+                        for (int i = 0; i < 4; i++) {
+                            consume();
+                            hex.append(c);
+                        }
+                        try {
+                            int unicodeValue = Integer.parseInt(hex.toString(), 16);
+                            buf.append((char) unicodeValue);
+                        } catch (NumberFormatException e) {
+                            throw new Error("Invalid unicode escape sequence: \\u" + hex.toString());
+                        }
+                        break;
                     default:
                         throw new Error("Invalid escape sequence: \\" + c);
                 }
