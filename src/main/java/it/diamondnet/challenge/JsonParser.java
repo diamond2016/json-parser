@@ -14,7 +14,7 @@ public class JsonParser extends Parser {
     // JSON Object (see grammar)
     public void jObject() {
         // each case checks for opening, whatever the value is
-        if (!getLookAhead().type ==  ) {
+        if (!match(JsonLexer.LBRACE)) {
             System.err.println(print_debug());
             throw new Error("Expecting opening object {, found " + getLookAhead().type + " " + getLookAhead().text + " at location: " + getInput().p);
         }
@@ -53,7 +53,7 @@ public class JsonParser extends Parser {
                 throw new Error("Expecting comma or closing brace in object :, found " + getLookAhead().type + " " + getLookAhead().text + " at location: " + getInput().p);
             }
         }  
-    }
+    } // jObject()
     
     // JSON Value
     public void jValue() {       
@@ -125,15 +125,41 @@ public class JsonParser extends Parser {
 
     // JSON Value: Array (of value or object)
     public void jArray() {
-        match(JsonLexer.LBRACK);
-        while (getLookAhead().type != JsonLexer.RBRACK) {
-            jValue();	
-            if (getLookAhead().type == JsonLexer.RBRACK)
-                break; // case of single value in array
-            match(JsonLexer.COMMA);
+        // each case checks for opening, whatever the value is
+        if (!match(JsonLexer.LBRACK)) {
+            System.err.println(print_debug());
+            throw new Error("Expecting opening object [, found " + getLookAhead().type + " " + getLookAhead().text + " at location: " + getInput().p);
         }
-        match(JsonLexer.RBRACK); 
-    }
+
+       // Empty
+       if (getLookAhead().type == JsonLexer.RBRACK) {
+          match(JsonLexer.RBRACK);
+          return;
+        }   
+
+        while (true) {
+            // value
+            jValue();	
+
+            // other value
+            if (getLookAhead().type == JsonLexer.COMMA) {
+                match(JsonLexer.COMMA);
+                continue;
+            }
+
+            // end of array (no comma)
+            else if (getLookAhead().type == JsonLexer.RBRACK) {
+                match(JsonLexer.RBRACK);	   
+                break;
+            }
+            
+            // no parsing
+            else  {
+                System.err.println(print_debug());
+                throw new Error("Expecting comma or closing brace in array :, found " + getLookAhead().type + " " + getLookAhead().text + " at location: " + getInput().p);
+            }
+        }
+    } // jArray()
     
     // Json payload (object or array)
     public void jPayload() {
@@ -148,6 +174,10 @@ public class JsonParser extends Parser {
         else {
          System.err.println(print_debug());
             throw new Error("Expecting opening payload JSON (object or array) {, found " + getLookAhead().type + " " + getLookAhead().text + " at location: " + getInput().p);            
+        }
+        if (getLookAhead().type != Lexer.EOF_TYPE) {
+            System.err.println(print_debug());
+            throw new Error("Expecting end of file after payload, found " + getLookAhead().type + " " + getLookAhead().text + " at location: " + getInput().p);
         }
     }
 
