@@ -10,10 +10,11 @@ public class JsonParser extends Parser {
         super(input);        
     }
 
+
     // JSON Object (see grammar)
     public void jObject() {
         // each case checks for opening, whatever the value is
-        if (!match(JsonLexer.LBRACE)) {
+        if (!getLookAhead().type ==  ) {
             System.err.println(print_debug());
             throw new Error("Expecting opening object {, found " + getLookAhead().type + " " + getLookAhead().text + " at location: " + getInput().p);
         }
@@ -134,6 +135,22 @@ public class JsonParser extends Parser {
         match(JsonLexer.RBRACK); 
     }
     
+    // Json payload (object or array)
+    public void jPayload() {
+        if (getLookAhead().type == JsonLexer.LBRACE) {
+            jObject();
+        }
+        
+        else if (getLookAhead().type == JsonLexer.LBRACK) {
+            Jjrray();
+        }
+
+        else {
+         System.err.println(print_debug());
+            throw new Error("Expecting opening payload JSON (object or array) {, found " + getLookAhead().type + " " + getLookAhead().text + " at location: " + getInput().p);            
+        }
+    }
+
     protected static String leggiJsonDaFile(String percorso) throws IOException {
         return new String(Files.readAllBytes(Paths.get(percorso)));
     }

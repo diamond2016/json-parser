@@ -19,13 +19,13 @@ public class Step5FinalTest {
             assertDoesNotThrow(() -> {
                 JsonLexer lexer = new JsonLexer(input);
                 JsonParser parser = new JsonParser(lexer);
-                parser.jValue();
+                parser.jPayload();
             });
         } else {
             assertThrows(Error.class, () -> {
                 JsonLexer lexer = new JsonLexer(input);
                 JsonParser parser = new JsonParser(lexer);
-                parser.jValue();
+                parser.jPayload();
             });
         }
     }
