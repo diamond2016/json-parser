@@ -126,4 +126,15 @@ public class JsonParserStep5Test {
         });
     }
 
+    @Test
+    public void jsonParserStep5Object2() {
+        String input = "{\n\"letter\": \"\u0041\"\n}";
+        System.out.println("Test object2 - step5");
+                assertDoesNotThrow(() -> {
+            JsonLexer lexer = new JsonLexer(input);
+            JsonParser parser = new JsonParser(lexer);
+            parser.jObject();
+        });
+    }
+
 }
