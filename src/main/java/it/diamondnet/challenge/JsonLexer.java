@@ -39,8 +39,8 @@ public class JsonLexer extends Lexer {
 	public static final String  EQUOTES = "\\\"";
 
     public static String[] tokenNames = {"n/a", "<EOF>", "LBRACE", "RBRACE", "COMMA", "COLON", "DQUOTE", "ALPHA", "BOOL", "NUMBER", "NULL", "LBRACK", "RBRACK", "STRING"};
-
-
+    private static final String REGEX_JSON_NUMBER = "^-?(0|[1-9]\\d*)(\\.\\d+)?([eE][+-]?\\d+)?$";
+  
 	public JsonLexer(String input) {
         super(input);
         
@@ -93,12 +93,8 @@ public class JsonLexer extends Lexer {
                     consume();
 					return new Token(RBRACK, "]");		
 				case MINUSC: {
-					int initialLoc = p;
-					try { if (Character.isDigit(input.charAt(initialLoc+1))) 
-						{consume(); return new Token(NUMBER, Character.toString(c)); } 
+					return NUMBER();
 					}
-					catch (IndexOutOfBoundsException e) { break;}	
-				}
 				case DOTC: {
 					int initialLoc = p;
 					try { if (Character.isDigit(input.charAt(initialLoc+1))) 
@@ -114,18 +110,12 @@ public class JsonLexer extends Lexer {
     }
    
 	private Token manage_default() {
-		char save_c = c;
 		if (c == DQUOTEC) {
 		    consume();
 		    return new Token(DQUOTE, "\"");
 		}
-		else if (Character.isDigit(c)) { 
-			consume(); 
-			return new Token(NUMBER, Character.toString(save_c)); 
-		}
-		else if (isAlphaValid(c)) { 
-			consume(); 
-			return new Token(ALPHA, Character.toString(save_c)); 
+		else if (Character.isDigit(c) || c == MINUSC ) { 
+			return NUMBER(); 
 		}
 		else {
 			System.err.println(print_debug());			
@@ -177,7 +167,7 @@ public class JsonLexer extends Lexer {
                             throw new Error("Invalid unicode escape sequence: \\u" + hex.toString());
                         }
                         break;
-                    default:
+                    default:	
                         throw new Error("Invalid escape sequence: \\" + c);
                 }
             } else {
@@ -201,12 +191,36 @@ public class JsonLexer extends Lexer {
 		return tok;
     }
     
+    protected boolean isValidJsonNumber(String text) {
+        // 1. Controlla che l'input non sia vuoto o nullo
+        if (text == null || text.length() == 0) {
+            return false;
+        }
+        System.out.println(text);
+  
+        // 2. Esegui il match con la regex
+        //    Il metodo .matches() controlla che l'intera stringa corrisponda
+        boolean is_match = text.matches(REGEX_JSON_NUMBER);
+
+        // 3. Restituisci il risultato
+        return is_match;
+        }
+
     protected Token NUMBER() {
-    	StringBuilder buf = new StringBuilder(); 
-        do { buf.append(c); consume(); } while ((Character.isDigit(c) || (c == '-') || (c == '.')) && c != EOF);
-		Token tok = new Token(NUMBER, buf.toString());
-		return tok;
+        StringBuilder buf = new StringBuilder();
+        buf.append(c);
+        consume();
+        while (c != RBRAC && c != RBRACKC && c != COMMAC && c != ' ' && c != EOF && c != '\n' && c != '\t' && c != '\r' && c != '\f') {
+            buf.append(c);
+            consume();
+        }
+
+        if (isValidJsonNumber(buf.toString()))
+            return new Token(NUMBER, buf.toString());
+        else
+            throw new Error("Invalid number sequence (length = " + buf.toString().length() + " >> : " + buf.toString());
     }
+
     
     public String getTokenName(int type) {
         return tokenNames[type];
