@@ -110,11 +110,7 @@ public class JsonLexer extends Lexer {
     }
    
 	private Token manage_default() {
-		if (c == DQUOTEC) {
-		    consume();
-		    return new Token(DQUOTE, "\"");
-		}
-		else if (Character.isDigit(c) || c == MINUSC ) { 
+		if (Character.isDigit(c) || c == MINUSC ) { 
 			return NUMBER(); 
 		}
 		else {

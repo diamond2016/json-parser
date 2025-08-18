@@ -106,7 +106,7 @@ public class JsonParserStep5Test {
 
     @Test
     public void jsonParserStep5String2() {
-        String input="^pom\\\\.xml$";    
+        String input="\"^pom\\\\.xml$\"";    
         System.out.println("Test string2 - step5");
         assertDoesNotThrow(() -> {
             JsonLexer lexer = new JsonLexer(input);
