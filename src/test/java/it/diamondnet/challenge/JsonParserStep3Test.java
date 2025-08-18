@@ -41,8 +41,9 @@ public class JsonParserStep3Test {
         System.out.println("Test Valid step3");
         JsonLexer lexer = new JsonLexer(input);
         JsonParser parser = new JsonParser(lexer);
-        parser.jObject();
-        assert true;
+        assertDoesNotThrow(() -> {
+            parser.jObject();
+        });
     }
     
         @Test
@@ -91,6 +92,25 @@ public class JsonParserStep3Test {
         assertDoesNotThrow(() -> {
             parser.jString();
         });
+    }
+
+    @Test
+    public void jsonParserStep3TestNumberValid() {
+        String input;
+        String percorso = "src/test/resources/tests/step3/validnumber.json";
+        try { 
+            input = JsonParser.leggiJsonDaFile(percorso);
+        } catch (Exception e) {
+            throw new RuntimeException("Errore nella lettura del file JSON: " + e.getMessage());
+        }
+        
+        System.out.println("Test valid number step3");
+        JsonLexer lexer = new JsonLexer(input);
+        JsonParser parser = new JsonParser(lexer);
+        assertDoesNotThrow(() -> {
+            parser.jNumber();
+        });
+
     }
 }
 

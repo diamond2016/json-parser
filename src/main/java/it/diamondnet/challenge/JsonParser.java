@@ -198,13 +198,20 @@ public class JsonParser extends Parser {
         else 
             end = l -1;
         StringBuilder buf = new StringBuilder();
-        for (int i = initial; i < p; i++)
+        for (int i = initial; i < p; i++) {
+            if ((i < 0) || (i >= l))
+                break;
             buf.append( getInput().input.charAt(i));
+        }
         buf.append('<');
-        buf.append( getInput().input.charAt(p));
+        if ((p >= 0) && (p < l))
+            buf.append( getInput().input.charAt(p));
         buf.append('>');
-        for (int i = p + 1; i < end; i++)
+        for (int i = p + 1; i < end; i++) {
+            if ((i < 0) || (i >= l))
+                break;
             buf.append( getInput().input.charAt(i));
+        }
         return(buf.toString());
     }
 

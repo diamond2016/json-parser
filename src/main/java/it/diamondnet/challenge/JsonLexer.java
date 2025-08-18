@@ -235,9 +235,10 @@ public class JsonLexer extends Lexer {
 	}
 	
     private String print_debug() {
-        int initial; int end; int p = getP() -1; int l = input.length(); int delta = 100;
-        if ( c == (char) -1 )
-            return (" ");
+        int initial; int end; int p = getP() -1; int l = input.length(); int delta = 20;
+        
+        if ( c == EOF )
+            end= l -1;
         if ((p - delta) >= 0)
             initial = p - delta;
         else 
@@ -247,13 +248,20 @@ public class JsonLexer extends Lexer {
         else 
             end = l -1;
         StringBuilder buf = new StringBuilder();
-        for (int i = initial; i < p; i++)
+        for (int i = initial; i < p; i++) {
+            if ((i < 0) || (i >= l))
+                break;
             buf.append( input.charAt(i));
+        }
         buf.append('<');
-        buf.append( input.charAt(p));
+        if ((p >= 0) && (p < l))
+            buf.append( input.charAt(p));
         buf.append('>');
-        for (int i = p + 1; i < end; i++)
+        for (int i = p + 1; i < end; i++) {
+            if ((i < 0) || (i >= l))
+                break;
             buf.append( input.charAt(i));
+        }
         return(buf.toString());
     }
 
