@@ -192,7 +192,6 @@ public class JsonLexer extends Lexer {
         if (text == null || text.length() == 0) {
             return false;
         }
-        System.out.println(text);
   
         // 2. Esegui il match con la regex
         //    Il metodo .matches() controlla che l'intera stringa corrisponda

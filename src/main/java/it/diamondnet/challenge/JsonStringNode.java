@@ -15,4 +15,9 @@ public class JsonStringNode implements JsonNode {
     public String toString() {
         return "JsonStringNode{" + value + "}";
     }
+
+    @Override
+    public String toPrettyString(int indent) {
+        return "\"" + value + "\"";
+    }
 }

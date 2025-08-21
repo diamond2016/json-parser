@@ -14,4 +14,9 @@ public class JsonNullNode implements JsonNode {
     public String toString() {
         return "JsonNullNode{}";
     }
+
+    @Override
+    public String toPrettyString(int indent) {
+        return "null";
+    }
 }

@@ -16,8 +16,25 @@ public class JsonArrayNode implements JsonNode {
 
     @Override
     public String toString() {
-        return "JsonArrayNode{" +
-                "children=" + children +
-                '}';
+        return "JsonArrayNode{"
+                + "children=" + children
+                + "}";
+    }
+
+    @Override
+    public String toPrettyString(int indent) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[\n");
+        String indentString = " ".repeat(indent + 2);
+        for (int i = 0; i < children.size(); i++) {
+            sb.append(indentString);
+            sb.append(children.get(i).toPrettyString(indent + 2));
+            if (i < children.size() - 1) {
+                sb.append(",");
+            }
+            sb.append("\n");
+        }
+        sb.append(" ".repeat(indent)).append("]");
+        return sb.toString();
     }
 }

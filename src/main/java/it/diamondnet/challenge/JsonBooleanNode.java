@@ -15,4 +15,9 @@ public class JsonBooleanNode implements JsonNode {
     public String toString() {
         return "JsonBooleanNode{" + value + "}";
     }
+
+    @Override
+    public String toPrettyString(int indent) {
+        return String.valueOf(value);
+    }
 }

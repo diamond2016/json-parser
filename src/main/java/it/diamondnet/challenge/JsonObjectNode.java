@@ -20,8 +20,28 @@ public class JsonObjectNode implements JsonNode {
 
     @Override
     public String toString() {
-        return "JsonObjectNode{" +
-                "children=" + children +
-                '}';
+        return "JsonObjectNode{"
+                + "children=" + children
+                + "}";
+    }
+
+    @Override
+    public String toPrettyString(int indent) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("{\n");
+        String indentString = " ".repeat(indent + 2);
+        int i = 0;
+        for (Map.Entry<String, JsonNode> entry : children.entrySet()) {
+            sb.append(indentString);
+            sb.append("\"").append(entry.getKey()).append("\": ");
+            sb.append(entry.getValue().toPrettyString(indent + 2));
+            if (i < children.size() - 1) {
+                sb.append(",");
+            }
+            sb.append("\n");
+            i++;
+        }
+        sb.append(" ".repeat(indent)).append("}");
+        return sb.toString();
     }
 }
