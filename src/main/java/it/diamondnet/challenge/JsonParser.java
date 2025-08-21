@@ -91,29 +91,37 @@ public class JsonParser extends Parser {
     }   
     
     // JSON Value: String
-    public void jString() {  
+    public JsonStringNode jString() {  
+        Token t = getLookAhead();
         match(JsonLexer.STRING);
+        return new JsonStringNode(t.text);
     }
     
     // JSON Value: Bool
-    public void jBool() {
+    public JsonBooleanNode jBool() {
+        Token t = getLookAhead();
         if (!match(JsonLexer.BOOL)) {
             System.err.println(print_debug());
             throw new Error("Expecting bool in value of object, found " + getLookAhead().type + " " + getLookAhead().text + " at location: " + getInput().p);
         }
+        if (t.text.equals("true"))
+            return new JsonBooleanNode(true);
+        return new JsonBooleanNode(false); 
     }
     
     // JSON Value: Null
-    public void jNull() {
+    public JsonNullNode jNull() {
         if (!match(JsonLexer.NULL)) {
             System.err.println(print_debug());
             throw new Error("Expecting null in value of object, found " + getLookAhead().type + " " + getLookAhead().text + " at location: " + getInput().p);
         }
+        return JsonNullNode.getInstance();
 
     }
 
     // JSON Value: Number
-    public void jNumber() {
+    public JsonNumberNode jNumber() {
+        Token t = getLookAhead();
         if (!match(JsonLexer.NUMBER)) {
             System.err.println(print_debug());
             throw new Error("Expecting number in value of object, found " + getLookAhead().type + " " + getLookAhead().text + " at location: " + getInput().p);
@@ -121,6 +129,7 @@ public class JsonParser extends Parser {
         while (match(JsonLexer.NUMBER)) {	
             ;
         }
+        return new JsonNumberNode(t.text);
     }	
 
     // JSON Value: Array (of value or object)

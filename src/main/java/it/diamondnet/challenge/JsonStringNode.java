@@ -13,6 +13,6 @@ public class JsonStringNode implements JsonNode {
 
     @Override
     public String toString() {
-        return "JsonStringNode{"" + value + ""}";
+        return "JsonStringNode{" + value + "}";
     }
 }
