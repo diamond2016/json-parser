@@ -13,4 +13,4 @@ https://codingchallenges.fyi/challenges/challenge-json-parser/
 Build Your Own JSON Parser.
 
 **What's next**
-Version 2.0 will implementeAST tree for retrieval and navigation in JSON file.
+Version 2.0 will implement the AST tree for retrieval and navigation in JSON file.
