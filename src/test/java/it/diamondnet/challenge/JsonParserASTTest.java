@@ -86,52 +86,53 @@ public class JsonParserASTTest {
         JsonLexer lexer = new JsonLexer(input);
         JsonParser parser = new JsonParser(lexer);
         JsonObjectNode node = parser.jObject();
-        System.out.println(node.toString());
+        System.out.println(node.toPrettyString(2));
         assertNotNull(node);
     }
 
     @Test
     public void jsonParserASTString1() {
         String input="\"1.43.0\"";    
-        System.out.println("Test string1 - step5");
-        assertDoesNotThrow(() -> {
-            JsonLexer lexer = new JsonLexer(input);
-            JsonParser parser = new JsonParser(lexer);
-            parser.jString();
-        });
+        System.out.println("Test string1 - AST (v2)");
+        JsonLexer lexer = new JsonLexer(input);
+        JsonParser parser = new JsonParser(lexer);
+        JsonStringNode node = parser.jString();
+        System.out.println(node.toPrettyString(2));
+        assertNotNull(node);
     }
 
     @Test
     public void jsonParserASTString2() {
         String input="\"^pom\\\\.xml$\"";    
-        System.out.println("Test string2 - step5");
-        assertDoesNotThrow(() -> {
-            JsonLexer lexer = new JsonLexer(input);
-            JsonParser parser = new JsonParser(lexer);
-            parser.jString();
-        });
+        System.out.println("Test string2 - AST (v2)");
+        JsonLexer lexer = new JsonLexer(input);
+        JsonParser parser = new JsonParser(lexer);
+        JsonNode node = parser.jString();
+        System.out.println(node.toPrettyString(2));
+        assertNotNull(node);
     }
 
     @Test
     public void jsonParserASTObject1() {
         String input="{\"java.jdt.ls.vmargs\": \"default: -XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable\"}";
-        System.out.println("Test object1 - step5");
-        assertDoesNotThrow(() -> {
-            JsonLexer lexer = new JsonLexer(input);
-            JsonParser parser = new JsonParser(lexer);
-            parser.jObject();
-        });
+        System.out.println("Test object1 - AST (v2)");
+        JsonLexer lexer = new JsonLexer(input);
+        JsonParser parser = new JsonParser(lexer);
+        JsonNode node = parser.jObject();
+        System.out.println(node.toPrettyString(2));
+        assertNotNull(node);
     }
 
     @Test
     public void jsonParserASTObject2() {
         String input = "{\n\"letter\": \"\u0041\"\n}";
-        System.out.println("Test object2 - step5");
-                assertDoesNotThrow(() -> {
-            JsonLexer lexer = new JsonLexer(input);
-            JsonParser parser = new JsonParser(lexer);
-            parser.jObject();
-        });
+        System.out.println("Test object2 - AST (v2)");
+        JsonLexer lexer = new JsonLexer(input);
+        JsonParser parser = new JsonParser(lexer);
+        JsonNode node = parser.jObject();
+        System.out.println(node.toPrettyString(2));
+        assertNotNull(node);
+
     }
 
 }
