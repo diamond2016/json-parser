@@ -8,7 +8,14 @@ public class Token {
         this.type = type;
         this.text = text;
     }
-                      
+    
+    public int getType() {
+        return type;
+    }
+    public String getText() {
+        return text;
+    }
+
     @Override
     public String toString() {
 
