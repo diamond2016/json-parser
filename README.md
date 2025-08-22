@@ -3,14 +3,21 @@ This is a JSON parser as from Coding Challenges. This process involves parsing t
 
 **My Implementation**
 This implementation is written in java with maven structure.
-Original ideas of Lexer and Parser from literature.
 This implementation does not fulfill test 18, 25  37 of final tests (see StepFinalTest5,java), because I believe that should be accettable for test cases.
 
-Actual version: 1.0
-
-**The Challenge**
-https://codingchallenges.fyi/challenges/challenge-json-parser/
+*source*
+Original ideas of Lexer and Parser from literature.
+The challenge: https://codingchallenges.fyi/challenges/challenge-json-parser/
 Build Your Own JSON Parser.
 
-**What's next**
-Version 2.0 will implement the AST tree for retrieval and navigation in JSON file.
+**Last version**
+Version 2.0 implements the AST tree for retrieval and navigation in JSON file.
+For example:
+
+JsonObjectNode node = parser.jObject(); // or use Jpayload()
+{
+  "theme": "Default",
+  "selectedAuthType": "oauth-personal",
+  "preferredEditor": "vscode"
+}
+JsonObjectNode{children={selectedAuthType=JsonStringNode{oauth-personal}, preferredEditor=JsonStringNode{vscode}, theme=JsonStringNode{Default}}}
