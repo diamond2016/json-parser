@@ -22,10 +22,6 @@ For example:
 ```
 ```text
 JsonObjectNode node = parser.jObject(); // or use jPayload()
-{
-  "theme": "Default",
-  "selectedAuthType": "oauth-personal",
-  "preferredEditor": "vscode"
-}
+
 JsonObjectNode{children={selectedAuthType=JsonStringNode{oauth-personal}, preferredEditor=JsonStringNode{vscode}, theme=JsonStringNode{Default}}}
 ```
