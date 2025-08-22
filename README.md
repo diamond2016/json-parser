@@ -13,11 +13,19 @@ Build Your Own JSON Parser.
 **Last version**
 Version 2.0 implements the AST tree for retrieval and navigation in JSON file.
 For example:
-
-JsonObjectNode node = parser.jObject(); // or use Jpayload()
+```json
+{
+  "theme": "Default",
+  "selectedAuthType": "oauth-personal",
+  "preferredEditor": "vscode"
+}
+```
+```text
+JsonObjectNode node = parser.jObject(); // or use jPayload()
 {
   "theme": "Default",
   "selectedAuthType": "oauth-personal",
   "preferredEditor": "vscode"
 }
 JsonObjectNode{children={selectedAuthType=JsonStringNode{oauth-personal}, preferredEditor=JsonStringNode{vscode}, theme=JsonStringNode{Default}}}
+```
